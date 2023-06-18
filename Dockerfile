@@ -4,15 +4,12 @@ WORKDIR /app/
 
 COPY . .
 
-RUN --mount=type=cache,id=cargo-registry,target=/usr/local/cargo/registry \
-    --mount=type=cache,id=app-target,target=/app/target/ \
-    cargo build --release && \
+RUN cargo build --release && \
     mv target/release/piped-proxy .
 
 FROM debian:stable-slim
 
-RUN --mount=type=cache,id=apt-cache,target=/var/cache/apt \
-    apt-get update && \
+RUN apt-get update && \
     apt-get install -y --no-install-recommends \
     ca-certificates && \
     rm -rf /var/lib/apt/lists/*
